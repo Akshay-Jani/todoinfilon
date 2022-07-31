@@ -1,0 +1,27 @@
+﻿@model IEnumerable<ToDoInfilonUI.ViewModels.ToDoViewModel>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var toDoItem in Model)
+            {
+            <tr>
+                <td>@toDoItem.Title</td>
+                <td>@toDoItem.Completed</td>
+                <td><a asp-controller="todo" asp-action="edit" asp-route-itemId="@toDoItem.Id" class="btn btn-primary">Edit</a></td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</body>
+</html>

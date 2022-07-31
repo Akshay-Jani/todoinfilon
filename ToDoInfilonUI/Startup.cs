@@ -5,9 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ToDoInfilonUI.Models.DB;
+using ToDoInfilonUI.Repository;
+using ToDoInfilonUI.Repository.Interface;
 
 namespace ToDoInfilonUI
 {
@@ -23,6 +27,11 @@ namespace ToDoInfilonUI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSession(opt => opt.IdleTimeout = TimeSpan.FromMinutes(30));
+            services.AddEntityFrameworkSqlServer();
+            services.AddDbContextPool<ToDoInfilonContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("InfilonDb")));
+            services.AddTransient<IAccountRepository, AccountRepository>();
+            services.AddTransient<IToDoRepository, ToDoRepository>();
             services.AddControllersWithViews();
         }
 
@@ -44,6 +53,7 @@ namespace ToDoInfilonUI
 
             app.UseRouting();
 
+            app.UseSession();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
